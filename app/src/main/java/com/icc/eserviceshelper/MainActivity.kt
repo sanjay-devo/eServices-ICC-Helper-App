@@ -9,7 +9,7 @@ import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.icc.eserviceshelper.adapters.CategoryAdapter
 import com.icc.eserviceshelper.databinding.ActivityMainBinding
-import com.icc.eserviceshelper.models.Category
+import com.icc.eserviceshelper.utils.UiState
 import com.icc.eserviceshelper.viewmodels.MainViewModel
 
 class MainActivity : AppCompatActivity() {
@@ -53,27 +53,32 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun observeViewModel() {
-        // Show progress when starting to observe
-        binding.progressBar.visibility = View.VISIBLE
-        
-        viewModel.filteredCategories.observe(this) { result ->
-            // Data is ready, hide progress
-            binding.progressBar.visibility = View.GONE
-            
-            result.onSuccess { categories ->
-                if (categories.isEmpty()) {
-                    binding.tvEmptyState.visibility = View.VISIBLE
-                    binding.recyclerViewCategories.visibility = View.GONE
-                    binding.tvEmptyState.text = "No results found"
-                } else {
+        viewModel.filteredCategories.observe(this) { state ->
+            when (state) {
+                is UiState.Loading -> {
+                    binding.progressBar.visibility = View.VISIBLE
                     binding.tvEmptyState.visibility = View.GONE
-                    binding.recyclerViewCategories.visibility = View.VISIBLE
-                    adapter.updateList(categories)
+                    binding.recyclerViewCategories.visibility = View.GONE
                 }
-            }.onFailure {
-                binding.tvEmptyState.text = "Error: ${it.message}"
-                binding.tvEmptyState.visibility = View.VISIBLE
-                binding.recyclerViewCategories.visibility = View.GONE
+                is UiState.Success -> {
+                    binding.progressBar.visibility = View.GONE
+                    val categories = state.data
+                    if (categories.isEmpty()) {
+                        binding.tvEmptyState.visibility = View.VISIBLE
+                        binding.recyclerViewCategories.visibility = View.GONE
+                        binding.tvEmptyState.text = "No results found"
+                    } else {
+                        binding.tvEmptyState.visibility = View.GONE
+                        binding.recyclerViewCategories.visibility = View.VISIBLE
+                        adapter.updateList(categories)
+                    }
+                }
+                is UiState.Error -> {
+                    binding.progressBar.visibility = View.GONE
+                    binding.recyclerViewCategories.visibility = View.GONE
+                    binding.tvEmptyState.visibility = View.VISIBLE
+                    binding.tvEmptyState.text = "Error: ${state.message}"
+                }
             }
         }
     }
