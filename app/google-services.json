@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "309964317431",
+    "firebase_url": "https://eservices-icc-helper-app-default-rtdb.firebaseio.com",
+    "project_id": "eservices-icc-helper-app",
+    "storage_bucket": "eservices-icc-helper-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:309964317431:android:09b6e09ffe8240c3aa29f2",
+        "android_client_info": {
+          "package_name": "com.icc.eserviceshelper"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB2rdhfeLpV0p_uLL_t4rwt4BGBpYFOtsg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
